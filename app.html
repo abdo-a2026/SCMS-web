@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SCMS – لوحة التحكم</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Playfair+Display:wght@700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="css/main.css"/>
+  <link rel="stylesheet" href="css/app.css"/>
+</head>
+<body class="app-body" data-theme="dark">
+  <!-- App Loader -->
+  <div id="app-loader" class="app-loader">
+    <div class="loader-inner">
+      <div class="loader-logo">SCMS</div>
+      <div class="loader-bar"><div class="loader-progress"></div></div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Modal Overlay -->
+  <div id="modal-overlay" class="modal-overlay hidden" onclick="closeModalOutside(event)"></div>
+  <div id="modal-container" class="modal-container hidden"></div>
+
+  <!-- Confirm Dialog -->
+  <div id="confirm-overlay" class="modal-overlay hidden"></div>
+  <div id="confirm-dialog" class="confirm-dialog hidden">
+    <div class="confirm-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+    <div class="confirm-title" id="confirm-title">تأكيد الحذف</div>
+    <div class="confirm-msg" id="confirm-msg">هل أنت متأكد؟</div>
+    <div class="confirm-actions">
+      <button class="btn btn-danger" id="confirm-yes">تأكيد</button>
+      <button class="btn btn-ghost" onclick="closeConfirm()">إلغاء</button>
+    </div>
+  </div>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <span class="logo-text">SCMS</span>
+          <span class="logo-dot"></span>
+        </div>
+        <button class="sidebar-toggle-btn" id="sidebar-toggle" onclick="toggleSidebar()">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item active" data-page="dashboard" onclick="navigate('dashboard',this)">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>لوحة التحكم</span>
+        </a>
+        <a href="#" class="nav-item" data-page="clients" onclick="navigate('clients',this)">
+          <i class="fa-solid fa-users"></i>
+          <span>العملاء</span>
+          <span class="nav-badge" id="nav-clients-count">0</span>
+        </a>
+        <a href="#" class="nav-item" data-page="pipeline" onclick="navigate('pipeline',this)">
+          <i class="fa-solid fa-diagram-project"></i>
+          <span>خط الأعمال</span>
+        </a>
+        <a href="#" class="nav-item" data-page="reports" onclick="navigate('reports',this)">
+          <i class="fa-solid fa-chart-bar"></i>
+          <span>التقارير</span>
+        </a>
+        <a href="#" class="nav-item" data-page="sources" onclick="navigate('sources',this)">
+          <i class="fa-solid fa-layer-group"></i>
+          <span>المصادر</span>
+        </a>
+        <a href="#" class="nav-item" data-page="users" onclick="navigate('users',this)">
+          <i class="fa-solid fa-user-shield"></i>
+          <span>المستخدمون</span>
+        </a>
+
+        <div class="nav-divider"></div>
+
+        <a href="#" class="nav-item" data-page="settings" onclick="navigate('settings',this)">
+          <i class="fa-solid fa-gear"></i>
+          <span>الإعدادات</span>
+        </a>
+      </nav>
+
+      <button class="btn-logout" onclick="logout()">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        <span>تسجيل الخروج</span>
+      </button>
+    </aside>
+
+    <!-- Main -->
+    <div class="main-wrap">
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="topbar-right">
+          <button class="topbar-menu-btn" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+          <h1 class="page-title" id="page-title">لوحة التحكم</h1>
+        </div>
+        <div class="topbar-left">
+          <div class="search-wrap">
+            <i class="fa-solid fa-search search-icon"></i>
+            <input type="text" id="global-search" class="global-search" placeholder="بحث سريع..." oninput="globalSearch(this.value)"/>
+          </div>
+          <button class="icon-btn notif-btn" id="notif-btn" onclick="toggleNotifications()">
+            <i class="fa-solid fa-bell"></i>
+            <span class="notif-badge" id="notif-badge">0</span>
+          </button>
+          <div class="user-menu" onclick="toggleUserMenu()">
+            <div class="user-avatar" id="user-avatar">A</div>
+            <div class="user-dropdown hidden" id="user-dropdown">
+              <div class="user-info">
+                <div class="user-name" id="user-name-display">مدير النظام</div>
+                <div class="user-role" id="user-role-display">Admin</div>
+              </div>
+              <div class="dropdown-divider"></div>
+              <a href="#" onclick="navigate('settings',null)"><i class="fa-solid fa-gear"></i> الإعدادات</a>
+              <a href="#" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> تسجيل الخروج</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Notifications Panel -->
+      <div class="notif-panel hidden" id="notif-panel">
+        <div class="notif-panel-header">
+          <span>الإشعارات</span>
+          <button onclick="clearNotifications()"><i class="fa-solid fa-check-double"></i> تعليم الكل كمقروء</button>
+        </div>
+        <div class="notif-list" id="notif-list">
+          <div class="notif-empty">لا توجد إشعارات</div>
+        </div>
+      </div>
+
+      <!-- Content Area -->
+      <main class="content-area" id="content-area">
+        <!-- Pages injected by JS -->
+      </main>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/pages/dashboard.js"></script>
+  <script src="js/pages/clients.js"></script>
+  <script src="js/pages/pipeline.js"></script>
+  <script src="js/pages/reports.js"></script>
+  <script src="js/pages/sources.js"></script>
+  <script src="js/pages/users.js"></script>
+  <script src="js/pages/settings.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
