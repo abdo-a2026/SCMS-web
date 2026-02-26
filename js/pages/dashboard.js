@@ -26,13 +26,17 @@ async function renderDashboard(container) {
         <div class="chart-header">
           <div class="chart-title"><i class="fa-solid fa-chart-area"></i> العملاء حسب الأشهر</div>
         </div>
-        <canvas id="lineChart" height="100"></canvas>
+        <div class="chart-canvas-wrap" style="position:relative;height:200px">
+          <canvas id="lineChart"></canvas>
+        </div>
       </div>
       <div class="chart-card">
         <div class="chart-header">
           <div class="chart-title"><i class="fa-solid fa-chart-pie"></i> توزيع الحالات</div>
         </div>
-        <canvas id="pieChart" height="160"></canvas>
+        <div class="chart-canvas-wrap" style="position:relative;height:200px">
+          <canvas id="pieChart"></canvas>
+        </div>
       </div>
     </div>
 
@@ -141,7 +145,7 @@ function renderLineChart(data) {
     },
     options: {
       responsive: true,
-      maintainAspectRatio: true,
+      maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: {
         x: {
@@ -184,8 +188,8 @@ function renderPieChart(data) {
               ? 'rgba(160,144,112,0.9)'
               : 'rgba(26,37,80,0.7)',
             font: { family: 'Cairo', size: 11 },
-            padding: 12,
-            boxWidth: 12,
+            padding: 10,
+            boxWidth: 10,
           }
         }
       },

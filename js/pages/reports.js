@@ -52,17 +52,21 @@ async function renderReports(container) {
         <div class="chart-header">
           <div class="chart-title"><i class="fa-solid fa-chart-line"></i> الإيرادات الشهرية</div>
         </div>
-        <canvas id="revenueChart" height="100"></canvas>
+        <div style="position:relative;height:200px">
+          <canvas id="revenueChart"></canvas>
+        </div>
       </div>
       <div class="chart-card">
         <div class="chart-header">
           <div class="chart-title"><i class="fa-solid fa-percent"></i> معدل التحويل الكلي</div>
         </div>
-        <div class="flex-center" style="height:200px;flex-direction:column;gap:.5rem">
-          <div style="font-size:4rem;font-weight:900;color:var(--accent)">${convRate}%</div>
+        <div class="flex-center" style="height:80px;flex-direction:column;gap:.5rem">
+          <div style="font-size:3rem;font-weight:900;color:var(--accent)">${convRate}%</div>
           <div style="color:var(--text-muted);font-size:.875rem">${closed.length} من ${clients.length} عميل</div>
         </div>
-        <canvas id="convChart" height="80"></canvas>
+        <div style="position:relative;height:100px">
+          <canvas id="convChart"></canvas>
+        </div>
       </div>
     </div>
 
@@ -148,6 +152,7 @@ function renderRevenueChart(clients) {
     },
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: {
         x: { grid: { color: gc }, ticks: { color: tc, font: { family: 'Cairo' } } },
@@ -191,6 +196,7 @@ function renderConvChart(clients, sources) {
     options: {
       indexAxis: 'y',
       responsive: true,
+      maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: {
         x: { display: false, beginAtZero: true, max: 100 },

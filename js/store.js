@@ -250,11 +250,13 @@ const Store = {
 
   updateNotifBadge() {
     const count = this.getNotifications().filter(n => !n.read).length;
-    const badge = document.getElementById('notif-badge');
-    if (badge) {
-      badge.textContent = count;
-      badge.style.display = count ? 'flex' : 'none';
-    }
+    ['notif-badge', 'notif-badge-m'].forEach(id => {
+      const badge = document.getElementById(id);
+      if (badge) {
+        badge.textContent = count;
+        badge.style.display = count ? 'flex' : 'none';
+      }
+    });
   },
 
   // ---- STATS ----

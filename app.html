@@ -39,6 +39,9 @@
   </div>
 
   <div class="app-layout">
+    <!-- Mobile Sidebar Backdrop -->
+    <div class="sidebar-backdrop hidden" id="sidebar-backdrop" onclick="closeMobileSidebar()"></div>
+
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
@@ -94,8 +97,8 @@
 
     <!-- Main -->
     <div class="main-wrap">
-      <!-- Topbar -->
-      <header class="topbar">
+      <!-- Desktop Topbar -->
+      <header class="topbar topbar-desktop">
         <div class="topbar-right">
           <button class="topbar-menu-btn" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
           <h1 class="page-title" id="page-title">لوحة التحكم</h1>
@@ -124,6 +127,32 @@
         </div>
       </header>
 
+      <!-- Mobile Topbar -->
+      <header class="topbar topbar-mobile">
+        <div class="mobile-topbar-right">
+          <button class="mobile-menu-btn" onclick="openMobileSidebar()">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="mobile-logo">SCMS</div>
+        </div>
+        <div class="mobile-topbar-left">
+          <button class="icon-btn mobile-search-btn" onclick="toggleMobileSearch()">
+            <i class="fa-solid fa-search"></i>
+          </button>
+          <button class="icon-btn notif-btn" id="notif-btn-m" onclick="toggleNotifications()">
+            <i class="fa-solid fa-bell"></i>
+            <span class="notif-badge" id="notif-badge-m">0</span>
+          </button>
+        </div>
+        <!-- Mobile Search Bar (hidden by default) -->
+        <div class="mobile-search-bar hidden" id="mobile-search-bar">
+          <i class="fa-solid fa-search" style="color:var(--text-muted)"></i>
+          <input type="text" id="global-search-m" class="mobile-search-input"
+            placeholder="بحث عن عميل..." oninput="globalSearch(this.value)"/>
+          <button onclick="toggleMobileSearch()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+      </header>
+
       <!-- Notifications Panel -->
       <div class="notif-panel hidden" id="notif-panel">
         <div class="notif-panel-header">
@@ -139,6 +168,32 @@
       <main class="content-area" id="content-area">
         <!-- Pages injected by JS -->
       </main>
+
+      <!-- Mobile Bottom Nav -->
+      <nav class="mobile-bottom-nav" id="mobile-bottom-nav">
+        <button class="bottom-nav-btn active" id="bnav-dashboard" onclick="bottomNavClick('dashboard', this)">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>الرئيسية</span>
+        </button>
+        <button class="bottom-nav-btn" id="bnav-clients" onclick="bottomNavClick('clients', this)">
+          <i class="fa-solid fa-users"></i>
+          <span>العملاء</span>
+        </button>
+        <button class="bottom-nav-btn bottom-nav-add" id="bnav-add" onclick="openClientModal()">
+          <div class="bottom-nav-add-icon">
+            <i class="fa-solid fa-plus"></i>
+          </div>
+          <span>إضافة</span>
+        </button>
+        <button class="bottom-nav-btn" id="bnav-pipeline" onclick="bottomNavClick('pipeline', this)">
+          <i class="fa-solid fa-diagram-project"></i>
+          <span>الأعمال</span>
+        </button>
+        <button class="bottom-nav-btn" id="bnav-more" onclick="openMobileSidebar()">
+          <i class="fa-solid fa-ellipsis"></i>
+          <span>المزيد</span>
+        </button>
+      </nav>
     </div>
   </div>
 

@@ -18,6 +18,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   const theme = localStorage.getItem('scms_theme') || 'dark';
   document.body.setAttribute('data-theme', theme);
 
+  // Apply saved font size
+  const fs = localStorage.getItem('scms_fontsize');
+  if (fs) document.documentElement.style.fontSize = fs + 'px';
+
   // Set user info
   document.getElementById('user-name-display').textContent = user.name || 'مستخدم';
   document.getElementById('user-role-display').textContent = user.role === 'admin' ? 'مدير النظام' : 'موظف';
@@ -69,10 +73,14 @@ async function navigate(page, el) {
     users:     'المستخدمون',
     settings:  'الإعدادات'
   };
-  document.getElementById('page-title').textContent = titles[page] || page;
+  const titleEl = document.getElementById('page-title');
+  if (titleEl) titleEl.textContent = titles[page] || page;
 
   // Close mobile sidebar
-  document.getElementById('sidebar')?.classList.remove('mobile-open');
+  closeMobileSidebar();
+
+  // Update bottom nav active state
+  updateBottomNav(page);
 
   // Render page
   const area = document.getElementById('content-area');
@@ -96,10 +104,50 @@ async function navigate(page, el) {
 // ---- Sidebar Toggle ----
 function toggleSidebar() {
   const sidebar = document.getElementById('sidebar');
-  if (window.innerWidth <= 900) {
-    sidebar.classList.toggle('mobile-open');
+  if (window.innerWidth <= 768) {
+    openMobileSidebar();
   } else {
     sidebar.classList.toggle('collapsed');
+  }
+}
+
+function openMobileSidebar() {
+  const sidebar  = document.getElementById('sidebar');
+  const backdrop = document.getElementById('sidebar-backdrop');
+  sidebar.classList.add('mobile-open');
+  backdrop.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeMobileSidebar() {
+  const sidebar  = document.getElementById('sidebar');
+  const backdrop = document.getElementById('sidebar-backdrop');
+  sidebar.classList.remove('mobile-open');
+  backdrop.classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+// ---- Bottom Nav ----
+function bottomNavClick(page, btn) {
+  navigate(page);
+  // active state handled by updateBottomNav
+}
+
+function updateBottomNav(page) {
+  const map = { dashboard: 'bnav-dashboard', clients: 'bnav-clients', pipeline: 'bnav-pipeline' };
+  document.querySelectorAll('.bottom-nav-btn:not(.bottom-nav-add)').forEach(b => {
+    b.classList.remove('active');
+  });
+  const id = map[page];
+  if (id) document.getElementById(id)?.classList.add('active');
+}
+
+// ---- Mobile Search ----
+function toggleMobileSearch() {
+  const bar = document.getElementById('mobile-search-bar');
+  bar.classList.toggle('hidden');
+  if (!bar.classList.contains('hidden')) {
+    document.getElementById('global-search-m')?.focus();
   }
 }
 
@@ -164,3 +212,4 @@ function checkFollowUps(clients) {
     renderNotifications();
   }
 }
+
